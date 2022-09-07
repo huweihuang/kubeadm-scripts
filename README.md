@@ -5,7 +5,7 @@ kubeadm的部署脚本
 
 ```bash
 # clone 仓库
-git clone git@github.com:huweihuang/kubeadm-scripts.git
+ git clone https://github.com/huweihuang/kubeadm-scripts.git
 
 # 执行节点组件安装脚本
 bash install-all.sh
