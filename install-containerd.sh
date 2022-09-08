@@ -5,7 +5,7 @@ ContainerdVersion=$1
 ContainerdVersion=${ContainerdVersion:-1.6.6}
 
 RuncVersion=$2
-RuncVersion=${RuncVersion:-1.1.3}
+RuncVersion=${RuncVersion:-1.1.4}
 
 CniVersion=$3
 CniVersion=${CniVersion:-1.1.1}
