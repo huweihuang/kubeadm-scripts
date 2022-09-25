@@ -11,9 +11,9 @@ kubeadm的部署脚本
 bash install-all.sh
 
 # 或者分开执行，确认部署结果
-bash kubeadm-init.sh
-bash install-containerd.sh
-bash install-kubeadm.sh
+bash kubeadm/kubeadm-init.sh
+bash containerd/install-containerd.sh
+bash kubeadm/install-kubeadm.sh
 ```
 
 ## 使用kubeadm搭建集群

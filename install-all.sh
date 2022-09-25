@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-bash kubeadm-init.sh
-bash install-containerd.sh
-bash install-kubeadm.sh
+bash kubeadm/kubeadm-init.sh
+bash containerd/install-containerd.sh
+bash kubeadm/install-kubeadm.sh
