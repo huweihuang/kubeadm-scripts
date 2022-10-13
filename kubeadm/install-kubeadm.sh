@@ -3,11 +3,12 @@
 ### install kubeadm kubelet kubectl ###
 
 Version=${Version:-1.24.2}
-wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubeadm
-wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubelet
-wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubectl
-chmod +x kubeadm kubelet kubectl
-cp kubeadm kubelet kubectl /usr/bin/
+
+BinPath="/usr/bin"
+wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubeadm -P ${BinPath}
+wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubelet -P ${BinPath}
+wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubectl -P ${BinPath}
+chmod +x ${BinPath}/kubeadm ${BinPath}/kubelet ${BinPath}/kubectl
 
 # add kubelet serivce
 cat > /lib/systemd/system/kubelet.service << EOF

@@ -29,8 +29,8 @@ echo \
 # install containerd
 sudo apt-get update
 
-# sudo apt-get install -y containerd.io
-sudo apt-get install -y containerd.io=${Version}
+sudo apt-get install -y containerd.io
+# sudo apt-get install -y containerd.io=${Version}
 
 systemctl daemon-reload
 systemctl enable containerd

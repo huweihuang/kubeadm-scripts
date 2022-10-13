@@ -28,8 +28,8 @@ echo \
 sudo apt-get update
 
 #  apt-cache madison docker-ce
-# sudo apt-get install docker-ce docker-ce-cli containerd.io
-sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
+# sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
+sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 # start docker
 systemctl enable docker

@@ -21,6 +21,7 @@ CrictlVersion=${CrictlVersion:-1.24.2}
 echo "--------------install containerd--------------"
 wget https://github.com/containerd/containerd/releases/download/v${ContainerdVersion}/containerd-${ContainerdVersion}-linux-amd64.tar.gz
 tar Cxzvf /usr containerd-${ContainerdVersion}-linux-amd64.tar.gz
+rm containerd-${ContainerdVersion}-linux-amd64.tar.gz
 
 echo "--------------install containerd service--------------"
 # wget https://raw.githubusercontent.com/containerd/containerd/681aaf68b7dcbe08a51c3372cbb8f813fb4466e0/containerd.service
@@ -71,14 +72,17 @@ wget https://github.com/containernetworking/plugins/releases/download/v${CniVers
 rm -fr /opt/cni/bin
 mkdir -p /opt/cni/bin
 tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v${CniVersion}.tgz
+rm cni-plugins-linux-amd64-v${CniVersion}.tgz
 
 echo "--------------install nerdctl--------------"
 wget https://github.com/containerd/nerdctl/releases/download/v${NerdctlVersion}/nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
 tar Cxzvf /usr/local/bin nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
+rm nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
 
 echo "--------------install crictl--------------"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CrictlVersion}/crictl-v${CrictlVersion}-linux-amd64.tar.gz
 tar Cxzvf /usr/local/bin crictl-v${CrictlVersion}-linux-amd64.tar.gz
+rm crictl-v${CrictlVersion}-linux-amd64.tar.gz
 
 cat > /etc/crictl.yaml << \EOF
 runtime-endpoint: unix:///run/containerd/containerd.sock
