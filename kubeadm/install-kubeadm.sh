@@ -2,9 +2,11 @@
 
 ### install kubeadm kubelet kubectl ###
 
+Version=$1
 Version=${Version:-1.24.2}
 
 BinPath="/usr/bin"
+rm ${BinPath}/kubeadm ${BinPath}/kubelet ${BinPath}/kubectl
 wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubeadm -P ${BinPath}
 wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubelet -P ${BinPath}
 wget https://dl.k8s.io/release/v${Version}/bin/linux/amd64/kubectl -P ${BinPath}
