@@ -18,6 +18,9 @@ NerdctlVersion=${NerdctlVersion:-0.21.0}
 CrictlVersion=$5
 CrictlVersion=${CrictlVersion:-1.24.2}
 
+BinPath="/usr/bin"
+LocalBinPath="/usr/local/bin"
+
 echo "--------------install containerd--------------"
 wget https://github.com/containerd/containerd/releases/download/v${ContainerdVersion}/containerd-${ContainerdVersion}-linux-amd64.tar.gz
 tar Cxzvf /usr containerd-${ContainerdVersion}-linux-amd64.tar.gz
@@ -65,7 +68,7 @@ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.to
 echo "--------------install runc--------------"
 wget https://github.com/opencontainers/runc/releases/download/v${RuncVersion}/runc.amd64
 chmod +x runc.amd64
-mv runc.amd64 /usr/bin/runc
+mv runc.amd64 ${BinPath}/runc
 
 echo "--------------install cni plugins--------------"
 wget https://github.com/containernetworking/plugins/releases/download/v${CniVersion}/cni-plugins-linux-amd64-v${CniVersion}.tgz
@@ -76,12 +79,12 @@ rm cni-plugins-linux-amd64-v${CniVersion}.tgz
 
 echo "--------------install nerdctl--------------"
 wget https://github.com/containerd/nerdctl/releases/download/v${NerdctlVersion}/nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
-tar Cxzvf /usr/local/bin nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
+tar Cxzvf ${LocalBinPath} nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
 rm nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
 
 echo "--------------install crictl--------------"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CrictlVersion}/crictl-v${CrictlVersion}-linux-amd64.tar.gz
-tar Cxzvf /usr/local/bin crictl-v${CrictlVersion}-linux-amd64.tar.gz
+tar Cxzvf ${LocalBinPath} crictl-v${CrictlVersion}-linux-amd64.tar.gz
 rm crictl-v${CrictlVersion}-linux-amd64.tar.gz
 
 cat > /etc/crictl.yaml << \EOF
