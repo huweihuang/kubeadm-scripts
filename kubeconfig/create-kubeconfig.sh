@@ -21,7 +21,7 @@ controlPlaneEndpoint: "${APISERVER}:6443"
 certificatesDir: "/etc/kubernetes/pki"
 EOF
 
-# 创建用户
+# 创建用户,用户名：${USER}
 mkdir -p ${KubeDir}
 kubeadm kubeconfig user --client-name=${USER} --config=kubeadm-config.yaml > ${KubeDir}/${USER}.yaml
 
@@ -40,3 +40,7 @@ fi
 # 设置kubeconfig的默认namespace
 export KUBECONFIG=${KubeDir}/${USER}.yaml
 kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-context --current --namespace=${USER}
+
+# 设置kubeconfig中namespace的token，用于登录dashboard
+TOKEN=$(kubectl -n ${USER} create token ${USER})
+kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-credentials ${USER} --token=${TOKEN}
