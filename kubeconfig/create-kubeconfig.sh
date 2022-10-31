@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e
 set -x
 
 APISERVER=$1
@@ -42,5 +42,5 @@ export KUBECONFIG=${KubeDir}/${USER}.yaml
 kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-context --current --namespace=${USER}
 
 # 设置kubeconfig中namespace的token，用于登录dashboard
-TOKEN=$(kubectl -n ${USER} create token ${USER})
+TOKEN=$(kubectl -n ${USER} create token default)
 kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-credentials ${USER} --token=${TOKEN}
