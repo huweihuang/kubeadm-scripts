@@ -41,6 +41,6 @@ fi
 export KUBECONFIG=${KubeDir}/${USER}.yaml
 kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-context --current --namespace=${USER}
 
-# 设置kubeconfig中namespace的token，用于登录dashboard
-TOKEN=$(kubectl -n ${USER} create token default)
+# 设置kubeconfig中namespace的token(过期时间365天)，用于登录dashboard
+TOKEN=$(kubectl -n ${USER} create token default --duration 8760h)
 kubectl --kubeconfig=${KubeDir}/${USER}.yaml config set-credentials ${USER} --token=${TOKEN}
