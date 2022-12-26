@@ -201,6 +201,7 @@ spec:
   selector:
     k8s-app: yurt-tunnel-dns
   type: ClusterIP
+  clusterIP: 10.99.53.96
   ports:
     - name: dns
       port: 53
