@@ -1,3 +1,9 @@
+## install openyurt control plane
+
+```bash
+bash helm-install-openyurt.sh {tunnelServerDomain} {tunnelServerPort}
+```
+
 ## install yurthub
 
 ```bash
