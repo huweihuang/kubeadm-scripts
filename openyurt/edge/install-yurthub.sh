@@ -5,6 +5,9 @@ set -x
 k8s_addr=$1
 token=$2
 
+### clean yurthub
+rm -fr /var/lib/yurthub
+
 ### install yurthub ###
 mkdir -p /etc/kubernetes/manifests/
 cd /etc/kubernetes/manifests/
