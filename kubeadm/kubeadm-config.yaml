@@ -32,7 +32,7 @@ etcd:
 imageRepository: k8s.gcr.io
 controlPlaneEndpoint: _MasterDomain_
 kind: ClusterConfiguration
-kubernetesVersion: _K8S_VERSION_
+kubernetesVersion: _K8sVersion_
 networking:
   dnsDomain: cluster.local
   serviceSubnet: 10.96.0.0/12

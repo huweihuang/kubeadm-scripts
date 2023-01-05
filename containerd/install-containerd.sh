@@ -13,10 +13,10 @@ CniVersion=$3
 CniVersion=${CniVersion:-1.1.1}
 
 NerdctlVersion=$4
-NerdctlVersion=${NerdctlVersion:-0.21.0}
+NerdctlVersion=${NerdctlVersion:-1.1.0}
 
 CrictlVersion=$5
-CrictlVersion=${CrictlVersion:-1.24.2}
+CrictlVersion=${CrictlVersion:-1.26.0}
 
 BinPath="/usr/bin"
 LocalBinPath="/usr/local/bin"

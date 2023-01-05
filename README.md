@@ -16,12 +16,26 @@ bash containerd/install-containerd.sh
 bash kubeadm/install-kubeadm.sh
 ```
 
+## 环境准备
+
+```bash
+# 设置域名本地解析
+echo "master_ip k8s_domain" >> /etc/hosts
+
+# 安装conntrack
+apt -y install conntrack
+```
+
 ## 使用kubeadm搭建集群
 
 ```bash
 # 对于第一个master生成默认配置，并修改
 kubeadm config print init-defaults > kubeadm-config.yaml
 
+# 或者下载kubeadm-config.yaml并修改MasterDomain和Version
+wget https://raw.githubusercontent.com/huweihuang/kubeadm-scripts/main/kubeadm/kubeadm-config.yaml
+sed -i "s|_MasterDomain_|${MasterDomain}|g;
+s|_K8sVersion_|${K8sVersion}|g" kubeadm-config.yaml
 
 # kubeadm init 创建第一个master节点
 kubeadm init --config kubeadm-config.yaml --upload-certs  --node-name <nodename>
