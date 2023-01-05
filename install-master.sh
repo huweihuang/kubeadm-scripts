@@ -5,8 +5,9 @@ MasterDomain=$1
 MasterIP=$2
 K8sVersion=$3
 K8sVersion=${K8sVersion:-1.24.2}
+NodeType="master"
 
-bash install-all.sh ${K8sVersion}
+bash install-all.sh ${NodeType} ${K8sVersion}
 
 # 设置域名本地解析
 echo "${MasterIP} ${MasterDomain}" >> /etc/hosts

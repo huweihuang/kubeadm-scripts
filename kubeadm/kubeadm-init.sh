@@ -2,10 +2,16 @@
 set -e
 
 ### init node ###
+NodeType=$1
+NodeType=${NodeType:-node}
 
-# master节点开放端口
-#iptables -A INPUT -p tcp -m multiport --dports 6443,2379,2380,10250 -j ACCEPT
-iptables -A INPUT -p tcp --dport 10250 -j ACCEPT
+if [ ${NodeType} == "master" ]; then
+    # master节点开放端口
+    iptables -A INPUT -p tcp -m multiport --dports 6443,2379,2380,10250 -j ACCEPT
+else
+    # node节点开放端口
+    iptables -A INPUT -p tcp --dport 10250 -j ACCEPT
+fi
 
 swapoff -a
 
