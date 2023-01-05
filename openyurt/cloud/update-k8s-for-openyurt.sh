@@ -10,7 +10,7 @@ sed -i "s|- --controllers=\*,bootstrapsigner,tokencleaner|- --controllers=\*,boo
 sed -i "s|- --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname|- --kubelet-preferred-address-types=Hostname,InternalIP,ExternalIP|g" ${YAML_DIR}/kube-apiserver.yaml
 
 # update dns policy
-sed -i '/dnsPolicy: "ClusterFirst"/c\
+sed -i '/spec/a\
   dnsPolicy: "None"\
   dnsConfig:\
     nameservers:\
