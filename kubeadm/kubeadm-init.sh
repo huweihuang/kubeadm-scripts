@@ -1,17 +1,30 @@
 #!/bin/bash
-set -e
+set -ex
 
 ### init node ###
 NodeType=$1
 NodeType=${NodeType:-node}
+iptablesRule=
 
+# 设置iptables规则
 if [ ${NodeType} == "master" ]; then
     # master节点开放端口
-    iptables -A INPUT -p tcp -m multiport --dports 6443,2379,2380,10250 -j ACCEPT
+    iptablesRule="-A INPUT -p tcp -m multiport --dports 6443,2379,2380,10250 -j ACCEPT -m comment --comment k8s-port"
 else
     # node节点开放端口
-    iptables -A INPUT -p tcp --dport 10250 -j ACCEPT
+    iptablesRule="-A INPUT -p tcp --dport 10250 -j ACCEPT -m comment --comment k8s-port"
 fi
+iptables ${iptablesRule}
+
+# 开通flannel vxlan udp端口8472
+iptables -A INPUT -p udp --dport 8472 -j ACCEPT -m comment --comment "flannel-port"
+
+# 持久化iptables规则
+cat >> /etc/sysconfig/iptables <<EOF
+${iptablesRule}
+-A INPUT -p udp --dport 8472 -j ACCEPT -m comment --comment "flannel-port"
+EOF
+
 
 swapoff -a
 
