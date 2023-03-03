@@ -20,6 +20,7 @@ CrictlVersion=${CrictlVersion:-1.26.0}
 
 BinPath="/usr/bin"
 LocalBinPath="/usr/local/bin"
+ContainerRootDir="/data/containerd"
 
 echo "--------------install containerd--------------"
 wget https://github.com/containerd/containerd/releases/download/v${ContainerdVersion}/containerd-${ContainerdVersion}-linux-amd64.tar.gz
@@ -64,6 +65,7 @@ echo "--------------update containerd config--------------"
 mkdir -p /etc/containerd/
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+sed -i  "s|\/var/\lib\/containerd|${ContainerRootDir}|g" /etc/containerd/config.toml
 
 echo "--------------install runc--------------"
 wget https://github.com/opencontainers/runc/releases/download/v${RuncVersion}/runc.amd64
