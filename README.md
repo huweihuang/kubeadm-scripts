@@ -1,55 +1,42 @@
-# kubeadm-scripts
-kubeadm的部署脚本
+# 使用kubeadm搭建集群
 
-## 安装kubeadm等组件
+详细步骤可以参考：[使用kubeadm部署生产环境kubernetes集群 ](https://blog.huweihuang.com/kubernetes-notes/setup/installer/install-k8s-by-kubeadm/)
 
 ```bash
-# clone 仓库
- git clone https://github.com/huweihuang/kubeadm-scripts.git
-
-# 执行节点组件安装脚本
-bash install-all.sh
-
-# 或者分开执行，确认部署结果
-bash kubeadm/kubeadm-init.sh
-bash containerd/install-containerd.sh
-bash kubeadm/install-kubeadm.sh
+git clone https://github.com/huweihuang/kubeadm-scripts.git
 ```
 
-## 环境准备
+## 1. 创建Master
 
 ```bash
-# 设置域名本地解析
-echo "master_ip k8s_domain" >> /etc/hosts
-
-# 安装conntrack
-apt -y install conntrack
+bash install-master.sh <MasterDomain> <MasterIP> 
 ```
 
-## 使用kubeadm搭建集群
+## 2. 生成Token
 
 ```bash
-# 对于第一个master生成默认配置，并修改
-kubeadm config print init-defaults > kubeadm-config.yaml
+kubeadm token create --print-join-command
+# 输出
+kubeadm join xxx:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
+```
 
-# 或者下载kubeadm-config.yaml并修改MasterDomain和Version
-wget https://raw.githubusercontent.com/huweihuang/kubeadm-scripts/main/kubeadm/kubeadm-config.yaml
-sed -i "s|_MasterDomain_|${MasterDomain}|g;
-s|_K8sVersion_|${K8sVersion}|g" kubeadm-config.yaml
+## 3. 添加Master
 
-# kubeadm init 创建第一个master节点
-kubeadm init --config kubeadm-config.yaml --upload-certs  --node-name <nodename>
+```bash
+bash join-master.sh <MasterDomain> <MasterIP> <NodeName> <Token> <Hash>
+```
 
+## 4. 添加Node
 
-# kubeadm join master 加入其他master
-kubeadm join <control-plane-endpoint>:6443 --token <token> \
---discovery-token-ca-cert-hash sha256:<hash> \
---control-plane --certificate-key <certificate-key> \
---node-name <nodename>
+```bash
+bash install-node.sh <MasterDomain> <MasterIP> <NodeName> <Token> <Hash>
+```
 
+## 5. 安装flannel,dashboard,metrics-server
 
-# kubeadm join node 添加worker节点
-kubeadm join <control-plane-endpoint>:6443 --token <token> \
---discovery-token-ca-cert-hash sha256:<hash> \
---node-name <nodename>
+```bash
+cd master/
+bash install-flannel.sh
+bash install-dashboard.sh
+bash install-metrics-server.sh
 ```
