@@ -22,9 +22,11 @@ echo "--------------[Modified CertificateValidity]-------------"
 grep "CertificateValidity" ./cmd/kubeadm/app/constants/constants.go
 
 # 重新编译
-# 通过kube-build镜像编译，保持与k8s官方构建环境一致，由于镜像过大(>5G)首次构建下载镜像的时间比较久。
+# 通过kube-build镜像编译(依赖docker服务)，保持与k8s官方构建环境一致，由于镜像过大(>5G)首次构建下载镜像的时间比较久。
 build/run.sh make kubeadm
 
 # 查看二进制版本
-ls -l _output/dockerized/bin/linux/amd64/
-_output/dockerized/bin/linux/amd64/kubeadm version
+cp -fr _output/dockerized/bin/linux/amd64/kubeadm ../kubeadm-v${K8sVersion}
+cd ../ 
+./kubeadm-v${K8sVersion} version
+sha256sum kubeadm-v${K8sVersion} > kubeadm-v${K8sVersion}.sha256sum
