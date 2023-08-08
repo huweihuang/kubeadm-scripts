@@ -27,6 +27,13 @@ EOF
 
 
 swapoff -a
+swap_result=$(free -m |grep Swap | awk '{print $2}')
+if [ "$swap_result" -ne 0 ]; then
+    echo "Swap set off failed. Please check it"
+    exit 1
+else
+    echo "Swap set off succeed."
+fi
 
 # 设置加载br_netfilter模块
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
