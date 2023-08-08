@@ -22,15 +22,57 @@ BinPath="/usr/bin"
 LocalBinPath="/usr/local/bin"
 ContainerRootDir="/data/containerd"
 
-echo "--------------install containerd--------------"
-wget https://github.com/containerd/containerd/releases/download/v${ContainerdVersion}/containerd-${ContainerdVersion}-linux-amd64.tar.gz
-tar Cxzvf /usr containerd-${ContainerdVersion}-linux-amd64.tar.gz
-rm containerd-${ContainerdVersion}-linux-amd64.tar.gz
+# 下载地址
+ContainerdDownloadUrl="https://github.com/containerd/containerd/releases/download/v${ContainerdVersion}/containerd-${ContainerdVersion}-linux-amd64.tar.gz"
+RuncDownloadUrl="https://github.com/opencontainers/runc/releases/download/v${RuncVersion}/runc.amd64"
+CniDownloadUrl="https://github.com/containernetworking/plugins/releases/download/v${CniVersion}/cni-plugins-linux-amd64-v${CniVersion}.tgz"
+NerdctlDownloadUrl="https://github.com/containerd/nerdctl/releases/download/v${NerdctlVersion}/nerdctl-${NerdctlVersion}-linux-amd64.tar.gz"
+CrictlDownloadUrl="https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CrictlVersion}/crictl-v${CrictlVersion}-linux-amd64.tar.gz"
 
-echo "--------------install containerd service--------------"
+# 下载二进制
+TmpDir="/tmp/kube-bin"
+mkdir -p ${TmpDir}
+
+function download(){
+    filename=$1
+    file_url=$2
+    install_dir=$3
+
+    if [ ! -f "${TmpDir}/${filename}" ]; then
+        echo "===========[ download ${filename} ]==========="
+        wget ${file_url} -P ${TmpDir}
+    fi
+    mkdir -p ${install_dir}
+    tar Cxzvf ${install_dir} ${TmpDir}/$filename
+}
+
+download containerd-${ContainerdVersion}-linux-amd64.tar.gz ${ContainerdDownloadUrl} /usr
+download cni-plugins-linux-amd64-v${CniVersion}.tgz ${CniDownloadUrl} /opt/cni/bin
+download nerdctl-${NerdctlVersion}-linux-amd64.tar.gz ${NerdctlDownloadUrl} ${LocalBinPath}
+download crictl-v${CrictlVersion}-linux-amd64.tar.gz ${CrictlDownloadUrl} ${LocalBinPath}
+
+
+# 安装runc
+echo "===========[ install runc ]==========="
+if [ ! -f "${TmpDir}/runc.${RuncVersion}" ]; then
+  wget https://github.com/opencontainers/runc/releases/download/v${RuncVersion}/runc.amd64 -O ${TmpDir}/runc.${RuncVersion}
+fi
+cp -fr ${TmpDir}/runc.${RuncVersion} ${BinPath}/runc
+chmod +x ${BinPath}/runc
+
+cat > /etc/crictl.yaml << \EOF
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+timeout: 2
+debug: false
+pull-image-on-create: false
+EOF
+
+
+# 安装containerd
+echo "===========[ install containerd ]==========="
 # wget https://raw.githubusercontent.com/containerd/containerd/681aaf68b7dcbe08a51c3372cbb8f813fb4466e0/containerd.service
 # mv containerd.service /lib/systemd/system/
-
 cat > /lib/systemd/system/containerd.service << EOF
 [Unit]
 Description=containerd container runtime
@@ -61,41 +103,11 @@ OOMScoreAdjust=-999
 WantedBy=multi-user.target
 EOF
 
-echo "--------------update containerd config--------------"
+# 修改配置
 mkdir -p /etc/containerd/
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 sed -i  "s|\/var/\lib\/containerd|${ContainerRootDir}|g" /etc/containerd/config.toml
-
-echo "--------------install runc--------------"
-wget https://github.com/opencontainers/runc/releases/download/v${RuncVersion}/runc.amd64
-chmod +x runc.amd64
-mv runc.amd64 ${BinPath}/runc
-
-echo "--------------install cni plugins--------------"
-wget https://github.com/containernetworking/plugins/releases/download/v${CniVersion}/cni-plugins-linux-amd64-v${CniVersion}.tgz
-rm -fr /opt/cni/bin
-mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v${CniVersion}.tgz
-rm cni-plugins-linux-amd64-v${CniVersion}.tgz
-
-echo "--------------install nerdctl--------------"
-wget https://github.com/containerd/nerdctl/releases/download/v${NerdctlVersion}/nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
-tar Cxzvf ${LocalBinPath} nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
-rm nerdctl-${NerdctlVersion}-linux-amd64.tar.gz
-
-echo "--------------install crictl--------------"
-wget https://github.com/kubernetes-sigs/cri-tools/releases/download/v${CrictlVersion}/crictl-v${CrictlVersion}-linux-amd64.tar.gz
-tar Cxzvf ${LocalBinPath} crictl-v${CrictlVersion}-linux-amd64.tar.gz
-rm crictl-v${CrictlVersion}-linux-amd64.tar.gz
-
-cat > /etc/crictl.yaml << \EOF
-runtime-endpoint: unix:///run/containerd/containerd.sock
-image-endpoint: unix:///run/containerd/containerd.sock
-timeout: 2
-debug: false
-pull-image-on-create: false
-EOF
 
 # 启动containerd服务
 systemctl daemon-reload
