@@ -2,8 +2,7 @@
 set -ex
 ### install kubeadm kubelet kubectl ###
 
-Version=$1
-Version=${Version:-1.24.2}
+Version=${1:-1.24.2}
 
 
 # 下载二进制

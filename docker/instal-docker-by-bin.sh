@@ -4,8 +4,8 @@ set -e
 # reference: https://docs.docker.com/engine/install/binaries/
 # https://download.docker.com/linux/static/stable/
 
-Version=$1
-Version=${Version:-20.10.18}
+Version=${1:-20.10.18}
+
 download_url="https://download.docker.com/linux/static/stable/x86_64/docker-${Version}.tgz"
 
 wget ${download_url}

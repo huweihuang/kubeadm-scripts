@@ -1,23 +1,16 @@
 #!/bin/bash
-set -e
+set -ex
 
 # reference:https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 
-ContainerdVersion=$1
-ContainerdVersion=${ContainerdVersion:-1.6.8}
+# 参数
+ContainerdVersion=${1:-1.6.8}
+RuncVersion=${2:-1.1.4}
+CniVersion=${3:-1.1.1}
+NerdctlVersion=${4:-1.1.0}
+CrictlVersion=${5:-1.26.0}
 
-RuncVersion=$2
-RuncVersion=${RuncVersion:-1.1.4}
-
-CniVersion=$3
-CniVersion=${CniVersion:-1.1.1}
-
-NerdctlVersion=$4
-NerdctlVersion=${NerdctlVersion:-1.1.0}
-
-CrictlVersion=$5
-CrictlVersion=${CrictlVersion:-1.26.0}
-
+# 目录
 BinPath="/usr/bin"
 LocalBinPath="/usr/local/bin"
 ContainerRootDir="/data/containerd"

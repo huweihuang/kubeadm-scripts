@@ -6,9 +6,8 @@ MasterIP=$2
 NodeName=$3
 Token=$4
 Hash=$5
+K8sVersion=${6:-1.24.2}
 
-K8sVersion=$3
-K8sVersion=${K8sVersion:-1.24.2}
 NodeType="master"
 
 # 设置域名本地解析

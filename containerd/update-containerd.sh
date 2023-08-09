@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-ContainerdVersion=$1
-ContainerdVersion=${ContainerdVersion:-1.6.8}
+ContainerdVersion=${1:-1.6.8}
 
 echo "--------------clean containerd--------------"
 mkdir /tmp/containerd/

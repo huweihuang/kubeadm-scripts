@@ -3,9 +3,8 @@ set -ex
 
 MasterDomain=$1
 HostIP=$2
+K8sVersion=${3:-1.24.2}
 
-K8sVersion=$3
-K8sVersion=${K8sVersion:-1.24.2}
 NodeType="master"
 
 bash install-all.sh ${NodeType} ${K8sVersion}

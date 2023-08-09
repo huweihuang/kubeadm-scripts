@@ -2,8 +2,7 @@
 
 set -ex
 
-Version=$1
-Version=${Version:-1.24.2}
+Version=${1:-1.24.2}
 
 # 备份kubeadm
 timestamp=$(date "+%Y%m%d%l%M%S")

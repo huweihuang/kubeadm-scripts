@@ -2,10 +2,8 @@
 set -x
 # 本脚本用于重新编译kubeadm以支持设置指定时间的证书文件（设置10年证书）
 
-K8sVersion=$1
-K8sVersion=${K8sVersion:-1.27.4}
-CertExpirationTime=$2
-CertExpirationTime=${CertExpirationTime:-10}  # 默认重新编译的证书过期时间为10年
+K8sVersion=${1:-1.27.4}
+CertExpirationTime=${2:-10}  # 默认重新编译的证书过期时间为10年
 
 # 下载源码
 if [ ! -f "v${K8sVersion}.tar.gz" ]; then

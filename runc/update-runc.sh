@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-RuncVersion=$1
-RuncVersion=${RuncVersion:-1.1.4}
+RuncVersion=${1:-1.1.4}
 
 echo "--------------backup runc--------------"
 version=$(runc --version |grep version |awk '{print $3}')

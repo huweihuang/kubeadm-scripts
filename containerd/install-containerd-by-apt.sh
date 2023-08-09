@@ -3,8 +3,7 @@ set -e
 
 # reference: https://docs.docker.com/engine/install/ubuntu/
 
-Version=$1
-Version=${Version:-1.6.8}
+Version=${1:-1.6.8}
 
 # uninstall docker
 sudo apt-get remove docker docker-engine docker.io containerd runc

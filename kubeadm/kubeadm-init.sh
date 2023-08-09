@@ -2,8 +2,7 @@
 set -ex
 
 ### init node ###
-NodeType=$1
-NodeType=${NodeType:-node}
+NodeType=${1:-node}
 iptablesRule=
 
 # 设置iptables规则
