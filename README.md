@@ -32,11 +32,17 @@ bash join-master.sh <MasterDomain> <MasterIP> <NodeName> <Token> <Hash>
 bash install-node.sh <MasterDomain> <MasterIP> <NodeName> <Token> <Hash>
 ```
 
-## 5. 安装flannel,dashboard,metrics-server
+## 5. 安装CNI组件
+
+```bash
+cd cni/
+bash install-flannel.sh
+```
+
+## 6. 安装dashboard,metrics-server
 
 ```bash
 cd master/
-bash install-flannel.sh
 bash install-dashboard.sh
 bash install-metrics-server.sh
 ```
