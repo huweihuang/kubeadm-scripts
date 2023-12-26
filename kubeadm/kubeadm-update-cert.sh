@@ -5,7 +5,7 @@ set -ex
 kubeadm certs check-expiration
 
 # 备份证书文件
-timestamp=$(date "+%Y%m%d%l%M%S")
+timestamp=$(date "+%Y%m%d%H%M%S")
 cp -fr /etc/kubernetes/pki /etc/kubernetes/pki.bak.${timestamp}
 cp -fr ~/.kube ~/.kube.bak.${timestamp}
 

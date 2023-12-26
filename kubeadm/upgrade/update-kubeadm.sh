@@ -5,7 +5,7 @@ set -ex
 Version=${1:-1.24.2}
 
 # 备份kubeadm
-timestamp=$(date "+%Y%m%d%l%M%S")
+timestamp=$(date "+%Y%m%d%H%M%S")
 mv /usr/bin/kubeadm /usr/bin/kubeadm.${timestamp} 2>/dev/null || true
 
 # 下载安装10年证书的kubeadm版本

@@ -28,7 +28,7 @@ function upgrade(){
     file_path=$2
 
     # 备份
-    timestamp=$(date "+%Y%m%d%l%M%S")
+    timestamp=$(date "+%Y%m%d%H%M%S")
     mv ${install_path} ${install_path}.${timestamp} 2>/dev/null || true
 
     # 拷贝文件
