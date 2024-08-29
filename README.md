@@ -73,9 +73,20 @@ bash setup-k8s.sh -t node -d [MasterDomain] -m [MasterIP] -n [NodeName] -k [Toke
 
 ## 5. 安装CNI组件
 
+任选一种网络插件安装。
+
+- 安装flannel网络插件
+
 ```bash
 cd cni/
 bash install-flannel.sh
+```
+
+- 安装calico网络插件
+
+```bash
+cd cni/
+bash install-calico.sh
 ```
 
 ## 6. 安装dashboard,metrics-server
