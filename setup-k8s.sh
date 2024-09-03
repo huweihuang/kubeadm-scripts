@@ -147,8 +147,15 @@ function join_master() {
     copy_kubeconfig
 }
 
+# 重置节点
+function reset_node(){
+    echo "[=======reset node and clean data=======]"
+    bash kubeadm/kubeadm-reset.sh >> ${LogDir}/kubeadm.log
+}
+
 main() {
     init_node
+    reset_node
 
     mkdir -p ${LogDir}
 
@@ -170,7 +177,7 @@ main() {
         fi
         ;;
     "node")
-        join_node > ${LogDir}/kubeadm.log
+        join_node >> ${LogDir}/kubeadm.log
         ;;
     *)
         echo "invalid NodeType"
