@@ -100,7 +100,8 @@ EOF
 mkdir -p /etc/containerd/
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-sed -i  "s|\/var/\lib\/containerd|${ContainerRootDir}|g" /etc/containerd/config.toml
+sed -i "s|\/var/\lib\/containerd|${ContainerRootDir}|g" /etc/containerd/config.toml
+sed -i "s|state = \"/run/containerd\"|state = \"${ContainerRootDir}/state\"|g" /etc/containerd/config.toml
 
 # 启动containerd服务
 systemctl daemon-reload
