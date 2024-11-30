@@ -89,6 +89,13 @@ cd cni/
 bash install-calico.sh
 ```
 
+- 安装cilium网络插件
+
+```bash
+cd cni/
+bash install-cilium.sh
+```
+
 ## 6. 安装dashboard,metrics-server
 
 ```bash
