@@ -8,7 +8,7 @@ NodeName=
 Token=
 Hash=
 CertificateKey=
-KubeadmWithCert=
+SetupTenYearCert=
 
 # 版本
 K8sVersion=$(grep K8sVersion version | awk -F "=" '{print $2}')
@@ -80,8 +80,8 @@ while getopts "ht:d:m:n:i:k:a:c:u:" opt; do
         echo "CertificateKey VALUE: $OPTARG"
         ;;
     u)
-        KubeadmWithCert=$OPTARG
-        echo "KubeadmWithCert VALUE: $OPTARG"
+        SetupTenYearCert=$OPTARG
+        echo "SetupTenYearCert VALUE: $OPTARG"
         ;;
     h) usage ;;
     ?) usage ;;
@@ -95,7 +95,7 @@ function version_ge() {
 function init_node() {
     echo "[=======install kubelet and containerd=======]"
     # 设置域名本地解析
-    sed -i '/${MasterDomain}/d' /etc/hosts
+    sed -i "/${MasterDomain}/d" /etc/hosts
     echo "${MasterIP} ${MasterDomain}" >>/etc/hosts
 
     # 安装conntrack
@@ -112,14 +112,26 @@ function copy_kubeconfig() {
 }
 
 function init_master() {
-    echo "[================init master================]"
+    timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    echo "[================[${timestamp}] init master================]"
+
+    # 如果版本大于1.31.0则使用v1beta4的配置
+    kubeadmConfigVersion="v1beta3"
+    if version_ge ${K8sVersion} "1.31.0"; then
+        kubeadmConfigVersion="v1beta4"
+    fi
 
     # 下载kubeadm-config.yaml并修改MasterDomain和Version
-    wget https://raw.githubusercontent.com/huweihuang/kubeadm-scripts/main/kubeadm/kubeadm-config.yaml
+    wget https://raw.githubusercontent.com/huweihuang/kubeadm-scripts/main/kubeadm/config/kubeadm-config-${kubeadmConfigVersion}.yaml -O kubeadm-config.yaml
     sed -i "s|_MasterDomain_|${MasterDomain}|g;
     s|_K8sVersion_|${K8sVersion}|g" kubeadm-config.yaml
 
-    # 如果版本大于1.28.0则修改镜像仓库地址
+    # 1.31.0版本后可直接在kubeadm的config中配置证书的时间，此处修改为10年
+    if [ ${SetupTenYearCert} ] && [ version_ge ${K8sVersion} "1.31.0" ]; then
+        sed -i 's/certificateValidityPeriod: 8760h0m0s/certificateValidityPeriod: 87600h0m0s/g' kubeadm-config.yaml
+    fi
+
+    # 如果版本大于1.28.0则修改镜像仓库地址，如果版本大于1.31.0则无需修改（即此修改不生效）
     if version_ge ${K8sVersion} "1.28.0"; then
         sed -i 's/k8s.gcr.io/registry.k8s.io/g' kubeadm-config.yaml
     fi
@@ -131,7 +143,8 @@ function init_master() {
 
 # 添加节点
 function join_node() {
-    echo "[================join node================]"
+    timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    echo "[================[${timestamp}] join node================]"
     kubeadm join ${MasterDomain}:6443 --token ${Token} \
         --discovery-token-ca-cert-hash sha256:${Hash} \
         --node-name ${NodeName}
@@ -139,7 +152,8 @@ function join_node() {
 
 # 添加master
 function join_master() {
-    echo "[================join master================]"
+    timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    echo "[================[${timestamp}] join master================]"
     kubeadm join ${MasterDomain}:6443 --token ${Token} \
         --discovery-token-ca-cert-hash sha256:${Hash} \
         --control-plane --certificate-key ${CertificateKey} \
@@ -159,8 +173,8 @@ main() {
 
     mkdir -p ${LogDir}
 
-    # 升级kubeadm为10年证书的版本
-    if [ ${KubeadmWithCert} ]; then
+    # k8s版本小于1.31.0则通过升级kubeadm为10年证书的版本（修改代码重新编译kubeadm）
+    if [ ${SetupTenYearCert} ] && [ version_ge "1.31.0" ${K8sVersion} ]; then
         bash kubeadm/upgrade/update-kubeadm.sh ${K8sVersion}
     fi
 
@@ -169,15 +183,18 @@ main() {
         # 如果以下参数都为空，则init master
         if [ -z ${Token} ] && [ -z ${Hash} ] && [ -z ${CertificateKey} ]; then
             init_master > ${LogDir}/kubeadm.log
+            cat ${LogDir}/kubeadm.log
         # 如果以下参数都不为空，则join master
         elif [ ${Token} ] && [ ${Hash} ] && [ ${CertificateKey} ]; then
             join_master > ${LogDir}/kubeadm.log
+            cat ${LogDir}/kubeadm.log
         else
             echo "invalid Token,Hash,CertificateKey"
         fi
         ;;
     "node")
-        join_node >> ${LogDir}/kubeadm.log
+        join_node > ${LogDir}/kubeadm.log
+        cat ${LogDir}/kubeadm.log
         ;;
     *)
         echo "invalid NodeType"

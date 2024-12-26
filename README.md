@@ -14,7 +14,7 @@ usage:
         -h                         显示帮助
         -t [NodeType]              节点类型：(master, node)
         -d [MasterDomain]          apiserver域名
-        -m [MasterIP]              Master IP/VIP
+        -m [MasterIP]              Master IP/VIP (第一个Master节点的IP)
         -n [NodeName]              节点名称
         -k [Token]                 添加master/node的Token
         -a [Hash]                  添加master/node的Hash
@@ -62,6 +62,7 @@ kubeadm join xxx:6443 --token <token> --discovery-token-ca-cert-hash sha256:<has
 ## 3. 添加Master
 
 ```bash
+# 此处MasterIP是第一个Master节点的IP
 bash setup-k8s.sh -t master -d [MasterDomain] -m [MasterIP] -n [NodeName] -k [Token] -a [Hash] -c [CertificateKey]
 ```
 
