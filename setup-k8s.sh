@@ -27,7 +27,7 @@ function usage() {
 	-h                         显示帮助
 	-t [NodeType]              节点类型：(master, node)
 	-d [MasterDomain]          apiserver域名
-	-m [MasterIP]              Master IP/VIP
+	-m [MasterIP]              Master IP/VIP (第一个Master节点的IP)
 	-n [NodeName]              节点名称
 	-k [Token]                 添加master/node的Token
 	-a [Hash]                  添加master/node的Hash
