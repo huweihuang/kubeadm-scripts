@@ -57,8 +57,10 @@ bash setup-k8s.sh -t master -d [MasterDomain] -m [MasterIP] -n [NodeName]
 kubeadm token create --print-join-command
 # 输出
 kubeadm join xxx:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
-# 
+
+# 如果CertificateKey过期，可以执行以下命令重新生成
 kubeadm init phase upload-certs --upload-certs
+# 输出
 [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
 [upload-certs] Using certificate key:
 <CertificateKey>
