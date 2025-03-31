@@ -4,7 +4,7 @@ set -x
 
 k8s_addr=$1
 token=$2
-version=$3
+version=${3:-latest}
 
 ### clean yurthub
 rm -fr /var/lib/yurthub
