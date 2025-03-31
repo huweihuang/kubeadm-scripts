@@ -4,6 +4,7 @@ set -x
 
 k8s_addr=$1
 token=$2
+version=$3
 
 ### clean yurthub
 rm -fr /var/lib/yurthub
@@ -16,7 +17,8 @@ wget https://raw.githubusercontent.com/openyurtio/openyurt/master/config/setup/y
 
 ### 修改master和token字段
 sed -i "s|__kubernetes_master_address__|${k8s_addr}|;
-s|__bootstrap_token__|${token}|" /etc/kubernetes/manifests/yurthub.yaml
+s|__bootstrap_token__|${token}|;
+s|yurthub:latest|yurthub:${version}|" /etc/kubernetes/manifests/yurthub.yaml
 
 mkdir -p /var/lib/openyurt
 cat << EOF > /var/lib/openyurt/kubelet.conf
