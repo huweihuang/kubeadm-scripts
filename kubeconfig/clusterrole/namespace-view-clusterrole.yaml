@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: namespace-view-clusterrole
+rules:
+- apiGroups: ["*"]
+  resources: ["pods","replicasets"]
+  verbs: ["get","list","watch"]
+- apiGroups: ["*"]
+  resources: ["deployments"]
+  verbs: ["get","list","watch"]

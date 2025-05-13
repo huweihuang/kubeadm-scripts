@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-admin-clusterrole
+rules:
+- apiGroups: ["*"]
+  resources: ["pods","replicasets","services","nodes","namespaces","events"]
+  verbs: ["get","list","watch"]
+- apiGroups: ["*"]
+  resources: ["deployments"]
+  verbs: ["get","list","watch","patch"]
+- apiGroups: ["*"]
+  resources: ["pods/exec","pods/log"]
+  verbs: ["get","list","watch","create"]
